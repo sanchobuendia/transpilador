@@ -1,0 +1,113 @@
+{
+  "models": [
+    {
+      "id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "provider": "aws_bedrock",
+      "series": "Claude Haiku 4.5",
+      "status": "general_availability",
+      "description": "Modelo de baixa latencia no Bedrock adequado para triagem, validacao de contexto e tarefas textuais simples.",
+      "capabilities": ["text", "vision", "tool_use", "long_context"],
+      "context_window": 200000,
+      "pricing": {
+        "input_per_1m_tokens": 0.25,
+        "output_per_1m_tokens": 1.25,
+        "currency": "USD"
+      },
+      "complexity_score": 1,
+      "latency_tier": "low",
+      "recommended_for": [
+        "spec_analyst",
+        "model_selector",
+        "publisher",
+        "cheap_tool_orchestration"
+      ],
+      "source": "AWS Bedrock Anthropic Claude catalog"
+    },
+    {
+      "id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "provider": "aws_bedrock",
+      "series": "Claude Haiku 4.5",
+      "status": "general_availability",
+      "description": "Modelo padrao para o transpilador no ambiente atual.",
+      "capabilities": ["text", "vision", "tool_use", "long_context", "reasoning"],
+      "context_window": 200000,
+      "pricing": {
+        "input_per_1m_tokens": 0.25,
+        "output_per_1m_tokens": 1.25,
+        "currency": "USD"
+      },
+      "complexity_score": 2,
+      "latency_tier": "low",
+      "recommended_for": [
+        "project_planner",
+        "project_generator",
+        "general_default"
+      ],
+      "source": "AWS Bedrock Anthropic Claude catalog"
+    },
+    {
+      "id": "bedrock/anthropic.claude-3-opus-20240229-v1:0",
+      "provider": "aws_bedrock",
+      "series": "Claude 3",
+      "status": "general_availability",
+      "description": "Modelo de maior capacidade para revisao rigorosa, analise densa e casos com maior carga de decisao.",
+      "capabilities": ["text", "vision", "tool_use", "long_context", "complex_reasoning"],
+      "context_window": 200000,
+      "pricing": {
+        "input_per_1m_tokens": 15.00,
+        "output_per_1m_tokens": 75.00,
+        "currency": "USD"
+      },
+      "complexity_score": 3,
+      "latency_tier": "medium",
+      "recommended_for": [
+        "project_reviewer",
+        "complex_architecture_review",
+        "high_rigor_reasoning"
+      ],
+      "source": "AWS Bedrock Anthropic Claude catalog"
+    },
+    {
+      "id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "provider": "aws_bedrock",
+      "series": "Claude Haiku 4.5",
+      "status": "general_availability",
+      "description": "Fallback para casos de baixa latencia conversacional quando o stack nao exige um modelo realtime dedicado.",
+      "capabilities": ["text", "vision", "tool_use", "long_context"],
+      "context_window": 200000,
+      "pricing": {
+        "input_per_1m_tokens": 0.25,
+        "output_per_1m_tokens": 1.25,
+        "currency": "USD"
+      },
+      "complexity_score": 2,
+      "latency_tier": "low",
+      "recommended_for": [
+        "voice_agents",
+        "streaming_dialogue"
+      ],
+      "source": "AWS Bedrock Anthropic Claude catalog"
+    },
+    {
+      "id": "bedrock/anthropic.claude-3-opus-20240229-v1:0",
+      "provider": "aws_bedrock",
+      "series": "Claude 3",
+      "status": "general_availability",
+      "description": "Opcao conservadora para casos excepcionalmente dificeis quando o custo e a latencia sao secundarios.",
+      "capabilities": ["deep_reasoning", "complex_reasoning", "scientific_reasoning", "tool_use"],
+      "context_window": 200000,
+      "pricing": {
+        "input_per_1m_tokens": 15.00,
+        "output_per_1m_tokens": 75.00,
+        "currency": "USD"
+      },
+      "complexity_score": 4,
+      "latency_tier": "high",
+      "recommended_for": [
+        "exceptional_hard_cases",
+        "research_grade_reasoning"
+      ],
+      "source": "AWS Bedrock Anthropic Claude catalog"
+    }
+  ]
+}

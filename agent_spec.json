@@ -1,0 +1,176 @@
+{
+  "name": "Assistente de Agendamento Laboratorial",
+  "goal": "Receber a imagem de um pedido medico, extrair os exames solicitados via OCR MCP, consultar os codigos correspondentes via RAG MCP, enviar a solicitacao para uma API FastAPI de agendamento e exibir o resultado final no terminal.",
+  "description": "Gerar um assistente CLI com Google ADK para o fluxo end-to-end de agendamento de exames em uma clinica laboratorial ficticia.",
+  "platform": {
+    "cloud": "gcp",
+    "preference": "google_managed_services_first",
+    "deployment_targets": [
+      "docker_compose_local",
+      "cloud_run_ready"
+    ]
+  },
+  "interface": {
+    "type": "cli",
+    "input_mode": "image_path",
+    "output_mode": "terminal_summary"
+  },
+  "input": {
+    "primary_artifact": {
+      "type": "image",
+      "description": "Imagem de pedido medico ficticio em fotografia, scan ou documento digitalizado.",
+      "accepted_formats": ["png", "jpg", "jpeg", "pdf"]
+    },
+    "supports_handwritten_text": true,
+    "contains_only_fictitious_data": true
+  },
+  "flow": [
+    {
+      "step": 1,
+      "id": "input_capture",
+      "description": "Receber no CLI o caminho da imagem do pedido medico."
+    },
+    {
+      "step": 2,
+      "id": "ocr_extraction",
+      "component": "ocr",
+      "description": "Extrair nomes dos exames via servidor MCP com transporte SSE."
+    },
+    {
+      "step": 3,
+      "id": "pii_sanitization",
+      "description": "Detectar e mascarar PII antes de qualquer envio a LLM ou persistencia."
+    },
+    {
+      "step": 4,
+      "id": "rag_lookup",
+      "component": "rag",
+      "description": "Consultar codigos e detalhes dos exames via servidor MCP com transporte SSE."
+    },
+    {
+      "step": 5,
+      "id": "appointment_submission",
+      "component": "scheduling_api",
+      "description": "Submeter os exames normalizados para a API FastAPI de agendamento."
+    },
+    {
+      "step": 6,
+      "id": "terminal_output",
+      "description": "Exibir no terminal os exames identificados, seus codigos e a confirmacao do agendamento."
+    }
+  ],
+  "components": [
+    {
+      "id": "ocr",
+      "kind": "mcp",
+      "transport": "sse",
+      "path": "/sse",
+      "port": 8001,
+      "provider": "google_cloud",
+      "backend": "document_ai",
+      "purpose": "Processar a imagem do pedido medico e extrair os nomes dos exames com anonimização inicial de dados sensiveis.",
+      "generated_tools": ["extract_request_data"]
+    },
+    {
+      "id": "rag",
+      "kind": "mcp",
+      "transport": "sse",
+      "path": "/sse",
+      "port": 8002,
+      "provider": "google_cloud",
+      "backend": "vertex_ai_search_datastore",
+      "purpose": "Consultar uma base ficticia de exames e codigos usando um datastore gerenciado da Google.",
+      "generated_tools": ["search_exam_codes"],
+      "data_contract": {
+        "minimum_exam_records": 100,
+        "fields": ["name", "code"]
+      }
+    },
+    {
+      "id": "scheduling_api",
+      "kind": "fastapi",
+      "transport": "http",
+      "path": "",
+      "port": 8000,
+      "provider": "google_cloud",
+      "backend": "cloud_run_ready_fastapi",
+      "purpose": "Registrar e consultar solicitacoes ficticias de agendamento.",
+      "generated_tools": [
+        "create_appointment",
+        "get_appointment",
+        "list_appointments"
+      ],
+      "api_contract": {
+        "base_path": "/appointments",
+        "swagger_required": true,
+        "create": {
+          "method": "POST",
+          "payload": {
+            "patient_reference": "string",
+            "exam_codes": ["string"],
+            "exam_names": ["string"],
+            "preferred_date": "string|null"
+          }
+        },
+        "get": {
+          "method": "GET",
+          "path": "/appointments/{appointment_id}"
+        },
+        "list": {
+          "method": "GET",
+          "path": "/appointments"
+        }
+      }
+    }
+  ],
+  "guardrails": {
+    "pii": {
+      "enabled": true,
+      "entities": ["PERSON_NAME", "CPF", "PHONE", "EMAIL", "ADDRESS"],
+      "mask_before_llm": true,
+      "mask_before_persistence": true,
+      "masking_strategy": "replace_with_entity_token"
+    }
+  },
+  "runtime_requirements": {
+    "agent_framework": "google_adk",
+    "mcp_transport": "sse_only",
+    "containerization": {
+      "docker_only": true,
+      "docker_compose_required": true
+    },
+    "documentation": {
+      "readme_required": true,
+      "must_document_mcp_startup": true,
+      "must_document_agent_connection_to_mcp": true,
+      "must_document_swagger_url": true
+    }
+  },
+  "deliverables": {
+    "must_generate": [
+      "adk_agent_runtime",
+      "mcp_ocr_server",
+      "mcp_rag_server",
+      "fastapi_scheduling_api",
+      "docker_compose",
+      "readme",
+      "sample_exam_dataset"
+    ],
+    "evidence": {
+      "execution_logs": true,
+      "swagger_docs": true,
+      "cli_output_example": true
+    }
+  },
+  "delivery": {
+    "github": {
+      "enabled": true,
+      "create_repository": true,
+      "owner": "your-github-owner",
+      "repository_name": "assistente-agendamento-laboratorial",
+      "private": true,
+      "default_branch": "main",
+      "description": "Repositorio gerado automaticamente pelo transpilador ADK"
+    }
+  }
+}

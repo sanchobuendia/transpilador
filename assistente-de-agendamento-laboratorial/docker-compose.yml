@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  ocr:
+    build: ./services/ocr
+    ports:
+      - "8001:8001"
+    networks:
+      - agent-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/sse', timeout=2)"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+  rag:
+    build: ./services/rag
+    ports:
+      - "8002:8002"
+    networks:
+      - agent-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/sse', timeout=2)"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+  scheduling-api:
+    build: ./services/scheduling_api
+    ports:
+      - "8000:8000"
+    networks:
+      - agent-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+networks:
+  agent-net:
+    driver: bridge

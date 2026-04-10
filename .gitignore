@@ -1,5 +1,43 @@
-# Object file
-*.o
+# Ambiente
+.env
+.env.*
+!.env.example
 
-# Ada Library Information
-*.ali
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtualenv
+.venv/
+venv/
+env/
+
+# Output do transpilador
+generated-agent/
+
+# Build / dist
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Testes
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log

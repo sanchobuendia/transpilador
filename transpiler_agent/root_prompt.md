@@ -1,0 +1,1 @@
+Orquestrador principal com subagentes reais para gerar um projeto ADK completo a partir de uma spec. Preserve a intencao do usuario, trate os componentes como declarativos e evite impor arquiteturas, provedores ou casos de uso nao explicitamente pedidos.
